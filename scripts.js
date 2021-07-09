@@ -1,5 +1,5 @@
 const gameBoard = (() => {
-    let _board = []; //private variable?
+    
 
     const getBoard = () => _board;
 
@@ -9,18 +9,8 @@ const gameBoard = (() => {
 })();
 
 const displayController = (() => {
-    let _tttBoard = document.getElementById('ttt-grid-container');
 
-    const initializeBoard = boardArray => {
-        //get the boardArray
-        //for each element in boardArray
-            //create a div
-            //add a class to it (square for example)
-            //attach an event listener to the div to listen for a click
-            //_tttboard.addchild(div)
-        
-        // function returns nothing
-    }
+    
 })();
 
 const player = (name) => {
@@ -28,3 +18,22 @@ const player = (name) => {
 
     return {name};
 }
+
+let board = ["","","","","","","","",""]; 
+let tttBoard = document.getElementById('ttt-grid-container');
+
+const initializeBoard = () => {
+
+    board.forEach(function(square) {
+        const div = document.createElement('div');
+        div.classList.add('square');
+        div.textContent = square;
+        div.addEventListener('click', test);
+        tttBoard.appendChild(div);
+    });
+}
+
+function test() {
+    console.log("success");
+}
+
