@@ -2,3 +2,29 @@
     padding: 0;
     margin: 0;
 }
+
+#ttt-area{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+header {
+    text-align: center;
+    border: 1px solid black;
+    height: 10vh;
+}
+
+#ttt-grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    border: 1px solid black;
+    width: 50vw;
+    height: 50vh;
+}
+
+.square {
+    border: 1px solid black;
+    text-align: center;
+}
