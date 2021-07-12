@@ -41,7 +41,7 @@ const gameBoard = ( () => {
         }
     }
 
-    let checkWin = () => {  //big ass ternary operator checking if a player wins after their move.
+    let checkWin = () => {  //ternary operator checking if current player has 3 in a row in legal spaces.
 
         //across the top row
         (board[0] === gameBoard.getPiece() 
@@ -93,7 +93,8 @@ const displayController = (() => {
 
     let _boardTile = 0;
     let _tttBoard = document.getElementById('ttt-grid-container');
-    const initializeBoard = () => {
+    const initializeBoard = () => { /* adds 9 divs to container to make the game grid
+        then adds a click listener to each div, increases _boardTile by 1 after each div created */ 
 
         board.forEach(function(square) {
             const div = document.createElement('div');
@@ -107,7 +108,9 @@ const displayController = (() => {
         });
     }
 
-    function _test(e) {
+    function _test(e) { /* sets the current players piece in the clicked div if the array index
+        is empty, checks for a winner after each move, then sets the turn and piece to the next
+        player if the last player didn't win on that turn */
         let myEvent = e;
         let squareID = myEvent.target.getAttribute('data-id');
         
@@ -120,7 +123,7 @@ const displayController = (() => {
                 alert(`${gameBoard.getTurn()} wins!`);
                 return;
             }
-            
+
             gameBoard.setTurn();
             gameBoard.setPiece();
     
@@ -134,10 +137,6 @@ const displayController = (() => {
     };
     
 })();
-
-//check win conditions for the current piece, if yes return true
-//get the current piece, then check if the current piece is in those array positions
-
 
 
 displayController.initializeBoard();
