@@ -17,9 +17,12 @@ const gameBoard = ( () => {
     
     let _currentTurn = p1.getName();
     let _currentPiece = p1.getPiece();
+    let _isWinner = undefined;
+    
 
     const getTurn = () => _currentTurn;
     const getPiece = () => _currentPiece;
+    const getWinner = () => _isWinner;
     
     
     const setTurn = function () {
@@ -38,8 +41,51 @@ const gameBoard = ( () => {
         }
     }
 
+    let checkWin = () => {  //big ass ternary operator checking if a player wins after their move.
+
+        //across the top row
+        (board[0] === gameBoard.getPiece() 
+        && board[1] === gameBoard.getPiece()
+        && board[2] === gameBoard.getPiece()
+        ||
+        //down the left column
+        board[0] === gameBoard.getPiece()
+        && board[3] === gameBoard.getPiece()
+        && board[6] === gameBoard.getPiece()
+        ||
+        // downwards right slash '\'
+        board[0] === gameBoard.getPiece()
+        && board[4] === gameBoard.getPiece()
+        && board[8] === gameBoard.getPiece()
+        ||
+        // across the middle column
+        board[1] === gameBoard.getPiece() 
+        && board[4] === gameBoard.getPiece()
+        && board[7] === gameBoard.getPiece()
+        ||
+        // down the right column
+        board[2] === gameBoard.getPiece() 
+        && board[5] === gameBoard.getPiece()
+        && board[8] === gameBoard.getPiece()
+        ||
+        // downwards left slash '/'
+        board[2] === gameBoard.getPiece() 
+        && board[4] === gameBoard.getPiece()
+        && board[6] === gameBoard.getPiece()
+        ||
+        // across the middle row
+        board[3] === gameBoard.getPiece()
+        && board[4] === gameBoard.getPiece()
+        && board[5] === gameBoard.getPiece()
+        ||
+        //across the bottom row
+        board[6] === gameBoard.getPiece()
+        && board[7] === gameBoard.getPiece()
+        && board[8] === gameBoard.getPiece() )? _isWinner = true: _isWinner = false;
+    }
+    
     return {
-        getTurn, getPiece, setTurn, setPiece
+        getTurn, getPiece, setTurn, setPiece, checkWin, getWinner
     };
 })();
 
@@ -68,6 +114,13 @@ const displayController = (() => {
         if(board[squareID] === "") {
             board[squareID] = gameBoard.getPiece();
             myEvent.target.textContent = board[squareID];
+            gameBoard.checkWin();
+            
+            if (gameBoard.getWinner()) {
+                alert(`${gameBoard.getTurn()} wins!`);
+                return;
+            }
+            
             gameBoard.setTurn();
             gameBoard.setPiece();
     
@@ -82,11 +135,10 @@ const displayController = (() => {
     
 })();
 
-
+//check win conditions for the current piece, if yes return true
+//get the current piece, then check if the current piece is in those array positions
 
 
 
 displayController.initializeBoard();
-
-
 
