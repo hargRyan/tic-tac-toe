@@ -1,6 +1,3 @@
-let board = ["","","","","","","","",""]; 
-
-
 
 const player = (name, piece) => {
 
@@ -11,6 +8,8 @@ const player = (name, piece) => {
 }
 
 const gameBoard = ( () => {
+
+    let _board = ["","","","","","","","",""]; 
     
     const p1 = player('player1', "X");
     const p2 = player('player2', "O");
@@ -18,11 +17,14 @@ const gameBoard = ( () => {
     let _currentTurn = p1.getName();
     let _currentPiece = p1.getPiece();
     let _isWinner = undefined;
+    let _isTie = undefined;
     
 
     const getTurn = () => _currentTurn;
     const getPiece = () => _currentPiece;
     const getWinner = () => _isWinner;
+    const getTie = () => _isTie;
+    const getBoard = () => _board; 
     
     
     const setTurn = function () {
@@ -44,53 +46,56 @@ const gameBoard = ( () => {
     let checkWin = () => {  //ternary operator checking if current player has 3 in a row in legal spaces.
 
         //across the top row
-        (board[0] === gameBoard.getPiece() 
-        && board[1] === gameBoard.getPiece()
-        && board[2] === gameBoard.getPiece()
+        (_board[0] === gameBoard.getPiece() 
+        && _board[1] === gameBoard.getPiece()
+        && _board[2] === gameBoard.getPiece()
         ||
         //down the left column
-        board[0] === gameBoard.getPiece()
-        && board[3] === gameBoard.getPiece()
-        && board[6] === gameBoard.getPiece()
+        _board[0] === gameBoard.getPiece()
+        && _board[3] === gameBoard.getPiece()
+        && _board[6] === gameBoard.getPiece()
         ||
         // downwards right slash '\'
-        board[0] === gameBoard.getPiece()
-        && board[4] === gameBoard.getPiece()
-        && board[8] === gameBoard.getPiece()
+        _board[0] === gameBoard.getPiece()
+        && _board[4] === gameBoard.getPiece()
+        && _board[8] === gameBoard.getPiece()
         ||
         // across the middle column
-        board[1] === gameBoard.getPiece() 
-        && board[4] === gameBoard.getPiece()
-        && board[7] === gameBoard.getPiece()
+        _board[1] === gameBoard.getPiece() 
+        && _board[4] === gameBoard.getPiece()
+        && _board[7] === gameBoard.getPiece()
         ||
         // down the right column
-        board[2] === gameBoard.getPiece() 
-        && board[5] === gameBoard.getPiece()
-        && board[8] === gameBoard.getPiece()
+        _board[2] === gameBoard.getPiece() 
+        && _board[5] === gameBoard.getPiece()
+        && _board[8] === gameBoard.getPiece()
         ||
         // downwards left slash '/'
-        board[2] === gameBoard.getPiece() 
-        && board[4] === gameBoard.getPiece()
-        && board[6] === gameBoard.getPiece()
+        _board[2] === gameBoard.getPiece() 
+        && _board[4] === gameBoard.getPiece()
+        && _board[6] === gameBoard.getPiece()
         ||
         // across the middle row
-        board[3] === gameBoard.getPiece()
-        && board[4] === gameBoard.getPiece()
-        && board[5] === gameBoard.getPiece()
+        _board[3] === gameBoard.getPiece()
+        && _board[4] === gameBoard.getPiece()
+        && _board[5] === gameBoard.getPiece()
         ||
         //across the bottom row
-        board[6] === gameBoard.getPiece()
-        && board[7] === gameBoard.getPiece()
-        && board[8] === gameBoard.getPiece() )? _isWinner = true: _isWinner = false;
+        _board[6] === gameBoard.getPiece()
+        && _board[7] === gameBoard.getPiece()
+        && _board[8] === gameBoard.getPiece() )? _isWinner = true: _isWinner = false;
     }
     
+    let checkTie = () => (_board.includes(''))? _isTie = false : _isTie = true;
+
     return {
-        getTurn, getPiece, setTurn, setPiece, checkWin, getWinner
+        getTurn, getPiece, setTurn, setPiece, checkWin, getWinner, checkTie, getTie, getBoard
     };
 })();
 
 const displayController = (() => {
 
+    let board = gameBoard.getBoard();
     let _boardTile = 0;
     let _tttBoard = document.getElementById('ttt-grid-container');
     const initializeBoard = () => { /* adds 9 divs to container to make the game grid
@@ -123,7 +128,13 @@ const displayController = (() => {
                 alert(`${gameBoard.getTurn()} wins!`);
                 return;
             }
+            
+            gameBoard.checkTie();
 
+            if (gameBoard.getTie()) {
+                alert("It's a tie!");
+                return;
+            }
             gameBoard.setTurn();
             gameBoard.setPiece();
     
