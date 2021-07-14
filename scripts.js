@@ -88,8 +88,30 @@ const gameBoard = ( () => {
     
     let checkTie = () => (_board.includes(''))? _isTie = false : _isTie = true;
 
+    const resetBoard = function () {
+        
+        _isTie = undefined;
+        _isWinner = undefined;
+        let squares = Array.from(document.getElementsByClassName('square'));
+
+        for (let i = 0; i < _board.length; i++) { //resets _board array to blank
+            _board[i] = "";
+            squares[i].textContent = "";
+          }
+        
+    }
+
     return {
-        getTurn, getPiece, setTurn, setPiece, checkWin, getWinner, checkTie, getTie, getBoard
+        getTurn, 
+        getPiece, 
+        setTurn, 
+        setPiece, 
+        checkWin, 
+        getWinner, 
+        checkTie, 
+        getTie, 
+        getBoard, 
+        resetBoard
     };
 })();
 
@@ -143,12 +165,28 @@ const displayController = (() => {
         
     }
 
+    function newGame() { // binds initializeBoard to newgame button
+
+        const ngButton = document.getElementById('new-game');
+        ngButton.addEventListener('click', initializeBoard);
+
+    }
+
+    function reset() { //adds board.resetBoard to the reset button
+
+        const resetButton = document.getElementById('reset');
+        resetButton.addEventListener('click', gameBoard.resetBoard);        
+    }
+
     return {
+        newGame,
+        reset,
         initializeBoard
     };
     
 })();
 
+window.addEventListener('load', displayController.initializeBoard);
 
-displayController.initializeBoard();
+displayController.reset();
 
