@@ -3,8 +3,11 @@ const player = (name, piece) => {
 
     const getName = () => name;
     const getPiece = () => piece;
+    function setName(newName) {
+        name = newName;
+    }
 
-    return {getName, getPiece};
+    return {getName, getPiece, setName};
 }
 
 const gameBoard = ( () => {
@@ -14,76 +17,69 @@ const gameBoard = ( () => {
     const p1 = player('player1', "X");
     const p2 = player('player2', "O");
     
-    let _currentTurn = p1.getName();
-    let _currentPiece = p1.getPiece();
+    let _currentTurn = p1;
     let _isWinner = undefined;
     let _isTie = undefined;
     
 
     const getTurn = () => _currentTurn;
-    const getPiece = () => _currentPiece;
+    const getPiece = () => _currentTurn.getPiece();
     const getWinner = () => _isWinner;
     const getTie = () => _isTie;
     const getBoard = () => _board; 
+    const getp1 = () => p1;
+    const getp2 = () => p2;
     
     
     const setTurn = function () {
-        if (_currentTurn === "player1") {
-            _currentTurn = p2.getName();
+        if (_currentTurn === p1) {
+            _currentTurn = p2;
         } else {
-            _currentTurn = p1.getName();
-        }
-    }
-
-    const setPiece = function () {
-        if (_currentPiece === "X") {
-            _currentPiece = p2.getPiece();
-        } else {
-            _currentPiece = p1.getPiece();
+            _currentTurn = p1;
         }
     }
 
     let checkWin = () => {  //ternary operator checking if current player has 3 in a row in legal spaces.
 
         //across the top row
-        (_board[0] === gameBoard.getPiece() 
-        && _board[1] === gameBoard.getPiece()
-        && _board[2] === gameBoard.getPiece()
+        (_board[0] === getPiece() 
+        && _board[1] === getPiece()
+        && _board[2] === getPiece()
         ||
         //down the left column
-        _board[0] === gameBoard.getPiece()
-        && _board[3] === gameBoard.getPiece()
-        && _board[6] === gameBoard.getPiece()
+        _board[0] === getPiece()
+        && _board[3] === getPiece()
+        && _board[6] === getPiece()
         ||
         // downwards right slash '\'
-        _board[0] === gameBoard.getPiece()
-        && _board[4] === gameBoard.getPiece()
-        && _board[8] === gameBoard.getPiece()
+        _board[0] === getPiece()
+        && _board[4] === getPiece()
+        && _board[8] === getPiece()
         ||
         // across the middle column
-        _board[1] === gameBoard.getPiece() 
-        && _board[4] === gameBoard.getPiece()
-        && _board[7] === gameBoard.getPiece()
+        _board[1] === getPiece() 
+        && _board[4] === getPiece()
+        && _board[7] === getPiece()
         ||
         // down the right column
-        _board[2] === gameBoard.getPiece() 
-        && _board[5] === gameBoard.getPiece()
-        && _board[8] === gameBoard.getPiece()
+        _board[2] === getPiece() 
+        && _board[5] === getPiece()
+        && _board[8] === getPiece()
         ||
         // downwards left slash '/'
-        _board[2] === gameBoard.getPiece() 
-        && _board[4] === gameBoard.getPiece()
-        && _board[6] === gameBoard.getPiece()
+        _board[2] === getPiece() 
+        && _board[4] === getPiece()
+        && _board[6] === getPiece()
         ||
         // across the middle row
-        _board[3] === gameBoard.getPiece()
-        && _board[4] === gameBoard.getPiece()
-        && _board[5] === gameBoard.getPiece()
+        _board[3] === getPiece()
+        && _board[4] === getPiece()
+        && _board[5] === getPiece()
         ||
         //across the bottom row
-        _board[6] === gameBoard.getPiece()
-        && _board[7] === gameBoard.getPiece()
-        && _board[8] === gameBoard.getPiece() )? _isWinner = true: _isWinner = false;
+        _board[6] === getPiece()
+        && _board[7] === getPiece()
+        && _board[8] === getPiece() )? _isWinner = true: _isWinner = false;
     }
     
     let checkTie = () => (_board.includes(''))? _isTie = false : _isTie = true;
@@ -104,14 +100,15 @@ const gameBoard = ( () => {
     return {
         getTurn, 
         getPiece, 
-        setTurn, 
-        setPiece, 
+        setTurn,  
         checkWin, 
         getWinner, 
         checkTie, 
         getTie, 
         getBoard, 
-        resetBoard
+        resetBoard,
+        getp1,
+        getp2
     };
 })();
 
@@ -147,7 +144,7 @@ const displayController = (() => {
             gameBoard.checkWin();
             
             if (gameBoard.getWinner()) {
-                alert(`${gameBoard.getTurn()} wins!`);
+                alert(`${gameBoard.getTurn().getName()} wins!`);
                 return;
             }
             
@@ -157,18 +154,22 @@ const displayController = (() => {
                 alert("It's a tie!");
                 return;
             }
+
             gameBoard.setTurn();
-            gameBoard.setPiece();
     
         }
             else return;
         
     }
 
-    function newGame() { // binds initializeBoard to newgame button
+    function newGame() { // binds to button, resets the board, binds player names
 
         const ngButton = document.getElementById('new-game');
-        ngButton.addEventListener('click', initializeBoard);
+        ngButton.addEventListener('click',() => {
+            gameBoard.resetBoard();
+            gameBoard.getp1().setName(prompt('Set the first players name.', "Player 1"));
+            gameBoard.getp2().setName(prompt('Set the second players name.', "Player 2")); 
+        } );
 
     }
 
@@ -187,6 +188,5 @@ const displayController = (() => {
 })();
 
 window.addEventListener('load', displayController.initializeBoard);
-
-displayController.reset();
-
+displayController.newGame();
+//newgame button currently has no listener, figure out what to do with that later.
